@@ -1,4 +1,4 @@
-drone-kubectl
+#drone-kubectl
 
 ```
 docker run --rm \
