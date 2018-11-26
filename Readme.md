@@ -1,4 +1,4 @@
-#drone-kubectl
+# drone-kubectl
 
 ```
 docker run --rm \
@@ -12,4 +12,14 @@ docker run --rm \
 Get the `PLUGIN_K8S_CLUSTER_CERT` and `PLUGIN_K8S_USER_TOKEN`
 ```
 kubectl -n {{serviceaccount namespace}} get secret $(kubectl -n {{serviceaccount namespace}} get secrets | grep {{serviceaccount name}} | awk -F " " '{print $1}') -o yaml | egrep 'ca.crt:|token:'
+```
+
+.drone.yml
+```
+pipeline:
+ deploy:
+    image: molon/drone-kubectl
+    secrets: [k8s_cluster_server, k8s_cluster_cert, k8s_user_token]
+    cmds:
+      - kubectl apply -f mainifest.yml
 ```

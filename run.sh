@@ -38,7 +38,7 @@ echo $'\n-----\nkubectl init completed\n-----\n'
 kubectl version
 
 # eval cmds
-echo $'\n----\neval cmds\n----\n'
+echo $'\n----\neval cmds\n----'
 
 IFS=',' read -ra CMD <<< "${PLUGIN_CMDS}"
 for i in "${CMD[@]}"; do
