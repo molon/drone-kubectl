@@ -37,22 +37,11 @@ echo $'\n-----\nkubectl init completed\n-----\n'
 # test ok
 kubectl version
 
+# eval cmds
+echo $'\n----\neval cmds\n----\n'
 
-echo $'\n----\n'
-echo ${PLUGIN_CMDS}
-echo $'\n----\n'
-
-# exec bash
-echo $'\n----\nexec bash shell\n----\n'
-
-if [[ -n ${PLUGIN_BASH_SHELL} && -n ${PLUGIN_BASH_SHELL_PATH} ]]; then
-    echo $'bash_shell and bash_shell_path are all not empty, use bash_shell'
-fi
-
-if [[ -n ${PLUGIN_BASH_SHELL} ]]; then
-    echo ${PLUGIN_BASH_SHELL} | bash
-elif [[ -n ${PLUGIN_BASH_SHELL_PATH} ]]; then
-    bash ${PLUGIN_BASH_SHELL_PATH}
-else
-    echo $'bash_shell and bash_shell_path are all empty, no shell to exec'
-fi
+IFS=',' read -ra CMD <<< "${PLUGIN_CMDS}"
+for i in "${CMD[@]}"; do
+    echo $'\n+ '$i
+    eval "$i"
+done
