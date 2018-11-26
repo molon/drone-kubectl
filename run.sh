@@ -37,9 +37,12 @@ echo $'\n-----\nkubectl init completed\n-----\n'
 # test ok
 kubectl version
 
+
 # exec bash
+echo $'\n----\nexec bash shell\n----\n'
+
 if [[ -n ${PLUGIN_BASH_SHELL} && -n ${PLUGIN_BASH_SHELL_PATH} ]]; then
-    echo $'\n----\nbash_shell and bash_shell_path are all not empty, use bash_shell\n----\n'
+    echo $'bash_shell and bash_shell_path are all not empty, use bash_shell'
 fi
 
 if [[ -n ${PLUGIN_BASH_SHELL} ]]; then
@@ -47,5 +50,5 @@ if [[ -n ${PLUGIN_BASH_SHELL} ]]; then
 elif [[ -n ${PLUGIN_BASH_SHELL_PATH} ]]; then
     bash ${PLUGIN_BASH_SHELL_PATH}
 else
-    echo $'\n----\nbash_shell and bash_shell_path are all empty, no shell to exec\n----\n'
+    echo $'bash_shell and bash_shell_path are all empty, no shell to exec'
 fi
