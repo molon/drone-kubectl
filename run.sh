@@ -32,5 +32,20 @@ kubectl config set-credentials foo --token=${DECODE_K8S_USER_TOKEN}
 kubectl config set-context foo@bar --cluster=bar --user=foo
 kubectl config use-context foo@bar 
 
-echo "kubectl is ready"
+echo $'\n-----\nkubectl init completed\n-----\n'
+
+# test ok
 kubectl version
+
+# exec bash
+if [[ -n ${PLUGIN_BASH_SHELL} && -n ${PLUGIN_BASH_SHELL_PATH} ]]; then
+    echo $'\n----\nbash_shell and bash_shell_path are all not empty, use bash_shell\n----\n'
+fi
+
+if [[ -n ${PLUGIN_BASH_SHELL} ]]; then
+    echo ${PLUGIN_BASH_SHELL} | bash
+elif [[ -n ${PLUGIN_BASH_SHELL_PATH} ]]; then
+    bash ${PLUGIN_BASH_SHELL_PATH}
+else
+    echo $'\n----\nbash_shell and bash_shell_path are all empty, no shell to exec\n----\n'
+fi
