@@ -7,3 +7,8 @@ docker run --rm \
   -e PLUGIN_K8S_USER_TOKEN=ZXlKaGJHY2... \
   molon/drone_kubectl
 ```
+
+Get the PLUGIN_K8S_CLUSTER_CERT and PLUGIN_K8S_USER_TOKEN
+```
+kubectl -n {{serviceaccount namespace}} get secret $(kubectl -n {{serviceaccount namespace}} get secrets | grep {{serviceaccount name}} | awk -F " " '{print $1}') -o yaml | egrep 'ca.crt:|token:'
+```
