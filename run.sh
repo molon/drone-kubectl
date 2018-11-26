@@ -17,7 +17,7 @@ fi
 # cluster
 if [ ! -z ${K8S_CLUSTER_CERT} ]; then
   echo ${K8S_CLUSTER_CERT} | base64 -d > ca.crt
-  kubectl config set-cluster bar --server=${K8S_CLUSTER_SERVER} --certificate-authority=ca.crt
+  kubectl config set-cluster bar --server=${K8S_CLUSTER_SERVER} --certificate-authority=ca.crt --embed-certs=true
 else
   echo "WARNING: Using insecure connection to cluster"
   kubectl config set-cluster bar --server=${K8S_CLUSTER_SERVER} --insecure-skip-tls-verify=true
