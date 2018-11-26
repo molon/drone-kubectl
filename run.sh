@@ -38,6 +38,10 @@ echo $'\n-----\nkubectl init completed\n-----\n'
 kubectl version
 
 
+echo $'\n----\n'
+echo ${PLUGIN_CMDS}
+echo $'\n----\n'
+
 # exec bash
 echo $'\n----\nexec bash shell\n----\n'
 
