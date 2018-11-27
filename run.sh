@@ -44,12 +44,13 @@ echo $'\n----\neval cmds\n----'
 
 IFS=","; CMDS=(${PLUGIN_CMDS}); unset IFS;
 for cmd in "${CMDS[@]}" ; do
-  echo $'\n+ '$cmd
-
+  # TODO: maybe invalid in alpine
   if [[ $cmd == *'##igerr##' ]]; then
     cmd=${cmd:0:${#cmd}-9} # remove ##igerr##
+    echo $'\n+ (igerr)'"$cmd"
     eval "$cmd"
   else
+    echo $'\n+ '"$cmd"
     eval "$cmd"
     if [ "$?" != "0" ]; then
       exit 1
