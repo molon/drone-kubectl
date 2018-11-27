@@ -14,6 +14,8 @@ if [ ! -z ${PLUGIN_K8S_USER_TOKEN} ]; then
   K8S_USER_TOKEN=$PLUGIN_K8S_USER_TOKEN
 fi
 
+echo $'-----\nkubectl init\n-----\n'
+
 # cluster
 if [ ! -z ${K8S_CLUSTER_CERT} ]; then
   echo ${K8S_CLUSTER_CERT} | base64 -d > ca.crt
@@ -32,7 +34,7 @@ kubectl config set-credentials foo --token=${DECODE_K8S_USER_TOKEN}
 kubectl config set-context foo@bar --cluster=bar --user=foo
 kubectl config use-context foo@bar 
 
-echo $'\n-----\nkubectl init completed\n-----\n'
+echo $'\n-----\nkubectl version\n-----\n'
 
 # test ok
 kubectl version
