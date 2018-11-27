@@ -1,6 +1,8 @@
 #!/bin/bash
 # Inspired by https://github.com/honestbee/drone-kubernetes/blob/master/update.sh
 
+set -e
+
 # env or secrets
 if [ ! -z ${PLUGIN_K8S_CLUSTER_SERVER} ]; then
   K8S_CLUSTER_SERVER=$PLUGIN_K8S_CLUSTER_SERVER
@@ -44,15 +46,6 @@ echo $'\n----\neval cmds\n----'
 
 IFS=","; CMDS=(${PLUGIN_CMDS}); unset IFS;
 for cmd in "${CMDS[@]}" ; do
-  if [[ $cmd == *'##igerr##' ]]; then
-    cmd=${cmd:0:${#cmd}-9} # remove ##igerr##
-    echo $'\n+ (igerr) '"$cmd"
-    eval "$cmd"
-  else
-    echo $'\n+ '"$cmd"
-    eval "$cmd"
-    if [ "$?" != "0" ]; then
-      exit 1
-    fi
-  fi
+  echo $'\n+ '"$cmd"
+  eval "$cmd"
 done
