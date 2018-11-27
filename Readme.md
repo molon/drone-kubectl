@@ -17,9 +17,19 @@ kubectl -n {{serviceaccount namespace}} get secret $(kubectl -n {{serviceaccount
 .drone.yml
 ```
 pipeline:
- deploy:
+  deploy:
     image: molon/drone-kubectl
     secrets: [k8s_cluster_server, k8s_cluster_cert, k8s_user_token]
     cmds:
-      - kubectl apply -f mainifest.yml
+      - |
+        if [ -z ${DRONE_TAG} ]; then
+          export IMAGE_TAG="${DRONE_COMMIT_SHA}"
+        else
+          export IMAGE_TAG="${DRONE_TAG}"
+        fi
+      - |
+        sed -e "s/{{.APP_NAME}}/app_name/g" \
+            -e "s/{{.IMAGE_TAG}}/$IMAGE_TAG/g" \
+            mainifest.yml | kubectl -n staging apply -f -
+      - kubectl -n staging get pods
 ```
