@@ -9,11 +9,6 @@ docker run --rm \
   molon/drone-kubectl
 ```
 
-Get the `PLUGIN_K8S_CLUSTER_CERT` and `PLUGIN_K8S_USER_TOKEN`
-```
-kubectl -n {{serviceaccount namespace}} get secret $(kubectl -n {{serviceaccount namespace}} get secrets | grep {{serviceaccount name}} | awk -F " " '{print $1}') -o yaml | egrep 'ca.crt:|token:'
-```
-
 .drone.yml
 ```
 pipeline:
@@ -28,8 +23,60 @@ pipeline:
           export IMAGE_TAG="${DRONE_TAG}"
         fi
       - |
-        sed -e "s/{{.APP_NAME}}/app_name/g" \
+        sed -e "s/{{.APP_NAME}}/ddrat/g" \
             -e "s/{{.IMAGE_TAG}}/$IMAGE_TAG/g" \
             mainifest.yml | kubectl -n staging apply -f -
+      - timeout -t 10 kubectl -n staging rollout status deployment ddrat
       - kubectl -n staging get pods
+```
+
+Get the `PLUGIN_K8S_CLUSTER_CERT` and `PLUGIN_K8S_USER_TOKEN`
+```
+kubectl -n {{serviceaccount namespace}} get secret $(kubectl -n {{serviceaccount namespace}} get secrets | grep {{serviceaccount name}} | awk -F " " '{print $1}') -o yaml | egrep 'ca.crt:|token:'
+```
+
+Create RBAC
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drone-deploy
+  namespace: drone
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: drone-deploy
+rules:
+  - apiGroups: ["","apps","extensions"]
+    resources: ["pods","deployments","services","ingresses"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: drone-deploy-staging
+  namespace: staging
+subjects:
+  - kind: ServiceAccount
+    name: drone-deploy
+    namespace: drone
+roleRef:
+  kind: ClusterRole
+  name: drone-deploy
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: drone-deploy-production
+  namespace: production
+subjects:
+  - kind: ServiceAccount
+    name: drone-deploy
+    namespace: drone
+roleRef:
+  kind: ClusterRole
+  name: drone-deploy
+  apiGroup: rbac.authorization.k8s.io
 ```
