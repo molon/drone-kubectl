@@ -42,8 +42,8 @@ kubectl version
 # eval cmds
 echo $'\n----\neval cmds\n----'
 
-IFS=',' read -ra CMD <<< "${PLUGIN_CMDS}"
-for i in "${CMD[@]}"; do
-    echo $'\n+ '$i
-    eval "$i"
+IFS=","; CMDS=(${PLUGIN_CMDS}); unset IFS;
+for cmd in "${CMDS[@]}" ; do
+    echo $'\n+ '$cmd
+    eval "$cmd"
 done
