@@ -28,11 +28,13 @@ pipeline:
             mainifest.yml | kubectl -n staging apply -f -
       - timeout -t 10 kubectl -n staging rollout status deployment ddrat
       - kubectl -n staging get pods
+
+# {{.APP_NAME}} and {{.IMAGE_TAG}} are the texts which need to replace in mainifest.yml.
 ```
 
 Get the `PLUGIN_K8S_CLUSTER_CERT` and `PLUGIN_K8S_USER_TOKEN`
 ```
-kubectl -n {{serviceaccount namespace}} get secret $(kubectl -n {{serviceaccount namespace}} get secrets | grep {{serviceaccount name}} | awk -F " " '{print $1}') -o yaml | egrep 'ca.crt:|token:'
+kubectl -n drone get secret $(kubectl -n drone get secrets | grep drone-deploy | awk -F " " '{print $1}') -o yaml | egrep 'ca.crt:|token:'
 ```
 
 Create RBAC
