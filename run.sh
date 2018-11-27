@@ -44,6 +44,15 @@ echo $'\n----\neval cmds\n----'
 
 IFS=","; CMDS=(${PLUGIN_CMDS}); unset IFS;
 for cmd in "${CMDS[@]}" ; do
-    echo $'\n+ '$cmd
+  echo $'\n+ '$cmd
+
+  if [[ $cmd == *'$$igerr$$' ]]; then
+    cmd=${cmd:0:${#cmd}-9} # remove $$igerr$$
     eval "$cmd"
+  else
+    eval "$cmd"
+    if [ "$?" != "0" ]; then
+      exit 1
+    fi
+  fi
 done
