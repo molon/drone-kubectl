@@ -47,7 +47,7 @@ for cmd in "${CMDS[@]}" ; do
   # TODO: maybe invalid in alpine
   if [[ $cmd == *'##igerr##' ]]; then
     cmd=${cmd:0:${#cmd}-9} # remove ##igerr##
-    echo $'\n+ (igerr)'"$cmd"
+    echo $'\n+ (igerr) '"$cmd"
     eval "$cmd"
   else
     echo $'\n+ '"$cmd"
