@@ -5,7 +5,7 @@ docker run --rm \
   -e PLUGIN_K8S_CLUSTER_SERVER=https://172.16.99.99:6443 \
   -e PLUGIN_K8S_CLUSTER_CERT=LS0tLS1CRUdJT... \
   -e PLUGIN_K8S_USER_TOKEN=ZXlKaGJHY2... \
-  -e PLUGIN_CMDS='kubectl get pods -n staging,kubectl apply -f mainifest.yml' \
+  -e PLUGIN_CMDS='kubectl get pods -n staging,kubectl apply -f k8s.yml' \
   molon/drone-kubectl
 ```
 
@@ -25,11 +25,11 @@ pipeline:
       - |
         sed -e "s/{{.APP_NAME}}/ddrat/g" \
             -e "s/{{.IMAGE_TAG}}/$IMAGE_TAG/g" \
-            mainifest.yml | kubectl -n staging apply -f -
+            k8s.yml | kubectl -n staging apply -f -
       - timeout -t 10 kubectl -n staging rollout status deployment ddrat
       - kubectl -n staging get pods
 
-# {{.APP_NAME}} and {{.IMAGE_TAG}} are the texts which need to replace in mainifest.yml.
+# {{.APP_NAME}} and {{.IMAGE_TAG}} are the texts which need to replace in k8s.yml.
 ```
 
 Get the `PLUGIN_K8S_CLUSTER_CERT` and `PLUGIN_K8S_USER_TOKEN`
